@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MindBloom — Type words, grow flowers! A creative word garden game for all ages. Play solo or challenge a friend in 2-player mode." />
+  <meta name="keywords" content="word game, brain game, kids game, creative game, mindbloom, word garden, fun game, vocabulary game" />
+  <meta name="author" content="David Mpangala" />
+  <meta property="og:title" content="MindBloom — Grow Your Word Garden" />
+  <meta property="og:description" content="Type words, grow flowers! The more creative the word, the more beautiful the bloom." />
+  <meta property="og:type" content="website" />
+  <title>MindBloom 🌸 — Grow Your Word Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🌸</span>
+        <span class="logo-text">MindBloom</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="howto-btn" title="How to play" aria-label="How to play">?</button>
+        <button class="icon-btn" id="sound-btn" title="Toggle sound" aria-label="Toggle sound">♪</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOW TO PLAY MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <h2 class="modal-title">🌱 How to Play</h2>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-icon">✏️</div>
+          <div class="step-text"><strong>Type any word</strong> — the longer and more creative, the better!</div>
+        </div>
+        <div class="how-step">
+          <div class="step-icon">🌸</div>
+          <div class="step-text"><strong>Watch it bloom</strong> — each word grows into a unique flower in your garden.</div>
+        </div>
+        <div class="how-step">
+          <div class="step-icon">⭐</div>
+          <div class="step-text"><strong>Earn points</strong> — short words = 1pt, epic words (11+ letters) = 5pts!</div>
+        </div>
+        <div class="how-step">
+          <div class="step-icon">🏆</div>
+          <div class="step-text"><strong>2-Player mode</strong> — take turns and see who grows the most beautiful garden!</div>
+        </div>
+      </div>
+      <div class="score-guide">
+        <div class="sg-title">Scoring Guide</div>
+        <div class="sg-grid">
+          <div class="sg-item"><span class="sg-len">2–3 letters</span><span class="sg-pts">1 pt 🌱</span></div>
+          <div class="sg-item"><span class="sg-len">4–5 letters</span><span class="sg-pts">2 pts 🌼</span></div>
+          <div class="sg-item"><span class="sg-len">6–7 letters</span><span class="sg-pts">3 pts 🌺</span></div>
+          <div class="sg-item"><span class="sg-len">8–10 letters</span><span class="sg-pts">4 pts 🌻</span></div>
+          <div class="sg-item"><span class="sg-len">11+ letters</span><span class="sg-pts">5 pts 🌟</span></div>
+        </div>
+      </div>
+      <button class="play-now-btn" id="play-now-btn">Let's Play!</button>
+    </div>
+  </div>
+
+  <!-- MAIN GAME -->
+  <main class="game-wrap">
+
+    <!-- MODE SELECTOR -->
+    <div class="mode-bar">
+      <button class="mode-btn active" id="btn-solo" onclick="setMode(1)">
+        <span class="mode-icon">🌿</span> Solo Garden
+      </button>
+      <button class="mode-btn" id="btn-two" onclick="setMode(2)">
+        <span class="mode-icon">🌹</span> 2 Players
+      </button>
+    </div>
+
+    <!-- PLAYER TURN INDICATOR (2P only) -->
+    <div class="turn-banner" id="turn-banner">
+      <div class="turn-inner" id="turn-inner">
+        <span class="turn-dot" id="turn-dot"></span>
+        <span id="turn-text">Player 1's turn</span>
+      </div>
+    </div>
+
+    <!-- SCORES -->
+    <div class="scores-bar" id="scores-bar">
+      <div class="score-card" id="score-p1">
+        <div class="score-label">🌿 My Garden</div>
+        <div class="score-num" id="num-p1">0</div>
+        <div class="score-sub">points</div>
+      </div>
+      <div class="score-card hidden" id="score-p2">
+        <div class="score-label">🌹 Player 2</div>
+        <div class="score-num" id="num-p2">0</div>
+        <div class="score-sub">points</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">🌸 Flowers</div>
+        <div class="score-num" id="num-flowers">0</div>
+        <div class="score-sub">planted</div>
+      </div>
+    </div>
+
+    <!-- GARDEN CANVAS -->
+    <div class="garden-wrap">
+      <canvas id="sky-canvas"></canvas>
+      <div class="garden" id="garden">
+        <div class="garden-empty" id="garden-empty">
+          <div class="empty-icon">🌱</div>
+          <div class="empty-text">Your garden is waiting...<br>Type a word to plant your first flower!</div>
+        </div>
+      </div>
+      <div class="ground"></div>
+    </div>
+
+    <!-- INPUT AREA -->
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <input
+            type="text"
+            id="word-input"
+            placeholder="Type a word..."
+            maxlength="24"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Enter a word to plant"
+          />
+          <span class="char-count" id="char-count">0</span>
+        </div>
+        <button class="plant-btn" id="plant-btn" onclick="plantWord()">
+          🌱 Plant
+        </button>
+      </div>
+      <div class="msg-bar" id="msg-bar"></div>
+      <div class="action-row">
+        <button class="action-btn" id="clear-btn" onclick="clearGarden()">🗑️ Clear Garden</button>
+        <button class="action-btn" id="undo-btn" onclick="undoLast()">↩️ Undo</button>
+        <button class="action-btn" id="share-btn" onclick="shareGarden()">🔗 Share Score</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- WINNER BANNER -->
+  <div class="winner-overlay" id="winner-overlay">
+    <div class="winner-card">
+      <div class="winner-emoji" id="winner-emoji">🏆</div>
+      <div class="winner-title" id="winner-title">Player 1 Wins!</div>
+      <div class="winner-sub" id="winner-sub">Amazing garden!</div>
+      <button class="play-now-btn" onclick="resetGame()">Play Again!</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Built with 💚 by <a href="https://david-del-pix.github.io/david-dev-portfolio/" target="_blank">David Mpangala</a> · 
+    <a href="https://github.com/David-del-pix/mindbloom" target="_blank">View on GitHub</a></p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
